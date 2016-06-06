@@ -19,6 +19,7 @@ class AccountServiceProvider extends ServiceProvider {
      */
     public function boot()
     {
+        $this->publishes([realpath(__DIR__ . '/../../../resources/app') => app_path()], 'resourcesapp');
     }
 
     /**

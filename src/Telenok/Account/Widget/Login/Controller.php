@@ -1,7 +1,6 @@
 <?php
 
-namespace Telenok\Account\Login;
-
+namespace Telenok\Account\Widget\Login;
 
 class Controller extends \App\Telenok\Core\Interfaces\Widget\Controller {
 
