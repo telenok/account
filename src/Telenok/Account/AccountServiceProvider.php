@@ -21,6 +21,8 @@ class AccountServiceProvider extends ServiceProvider {
     {
         $this->publishes([realpath(__DIR__ . '/../../../resources/app') => app_path()], 'resourcesapp');
         $this->loadViewsFrom(realpath(__DIR__ . '/../../view'), 'account');
+
+        include __DIR__ . '/../../config/routes.php';
     }
 
     /**

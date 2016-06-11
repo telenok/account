@@ -9,26 +9,26 @@
     </div>
 @endif
 
-<form class="form-horizontal" role="form" method="POST" action="{{ url('/auth/login') }}">
+<form method="POST" action="{!! route($controller->getRouteLogin()) !!}">
     <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
-    <div class="form-group">
-        <label class="col-md-4 control-label">E-Mail Address</label>
-        <div class="col-md-6">
-            <input type="email" class="form-control" name="email" value="{{ old('email') }}">
+    <div>
+        <label>E-Mail Address</label>
+        <div>
+            <input type="text" name="{{$controller->getLoginUsername()}}" value="">
         </div>
     </div>
 
-    <div class="form-group">
-        <label class="col-md-4 control-label">Password</label>
-        <div class="col-md-6">
-            <input type="password" class="form-control" name="password">
+    <div>
+        <label>Password</label>
+        <div>
+            <input type="password" name="password">
         </div>
     </div>
 
-    <div class="form-group">
-        <div class="col-md-6 col-md-offset-4">
-            <div class="checkbox">
+    <div>
+        <div>
+            <div>
                 <label>
                     <input type="checkbox" name="remember"> Remember Me
                 </label>
@@ -36,9 +36,9 @@
         </div>
     </div>
 
-    <div class="form-group">
-        <div class="col-md-6 col-md-offset-4">
-            <button type="submit" class="btn btn-primary">Login</button>
+    <div>
+        <div>
+            <button type="submit">Login</button>
 
             <a href="{!! route('auth.password-restore', ['locale' => config('app.locale')]) !!}">
                 Forgot Your Password?
@@ -46,4 +46,13 @@
 
         </div>
     </div>
+
+    <div>
+        <div>
+            <div>
+aadsda
+            </div>
+        </div>
+    </div>
+
 </form>
