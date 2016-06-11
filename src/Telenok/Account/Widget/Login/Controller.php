@@ -24,21 +24,10 @@ class Controller extends \App\Telenok\Core\Interfaces\Widget\Controller {
      * @protected
      * @property {String} $defaultFrontendView
      * Name of view for fronend if user dont want to create own view.
-     * @member Telenok.Core.Widget.Menu.Controller
+     * @member Telenok.Core.Widget.Login.Controller
      */
     protected $defaultFrontendView = "account::widget.login.widget-frontend";
-
-    /**
-     * @method getNotCachedContent
-     * Return not cached content of widget.
-     * @return {String}
-     * @member Telenok.Account.Widget.Html.Controller
-     */
-    public function getNotCachedContent()
-    {
-        if ($t = $this->getFileTemplatePath())
-        {
-            return file_get_contents($t);
-        }
-    }
+    
+    
+    
 }
