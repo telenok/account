@@ -71,7 +71,7 @@ class Controller extends \App\Telenok\Core\Abstraction\Widget\Controller {
      * The guard to be used during authentication.
      * @member Telenok.Account.Widget.Login.Controller
      */
-    protected $guard;
+    protected $guard = 'web';
 
     /**
      * @protected
@@ -129,7 +129,7 @@ class Controller extends \App\Telenok\Core\Abstraction\Widget\Controller {
             $this->maxLoginAttempts = array_get($structure, 'max_login_attempts');
             $this->lockoutTime = array_get($structure, 'lockout_time');
             $this->guard = array_get($structure, 'guard');
-            $this->redirectPath = array_get($structure, 'redirectPath');
+            $this->redirectPath = array_get($structure, 'redirect_path');
             $this->socialite = array_get($structure, 'socialite');
         }
         else
@@ -139,7 +139,7 @@ class Controller extends \App\Telenok\Core\Abstraction\Widget\Controller {
             $this->maxLoginAttempts = $this->getConfig('max_login_attempts', $this->maxLoginAttempts);
             $this->lockoutTime = $this->getConfig('lockout_time', $this->lockoutTime);
             $this->guard = $this->getConfig('guard', $this->guard);
-            $this->redirectPath = $this->getConfig('redirectPath', $this->redirectPath);
+            $this->redirectPath = $this->getConfig('redirect_path', $this->redirectPath);
             $this->socialite = $this->getConfig('socialite', $this->socialite);
         }
 
@@ -206,7 +206,7 @@ class Controller extends \App\Telenok\Core\Abstraction\Widget\Controller {
      *
      * @return string
      */
-    protected function getGuard()
+    public function getGuard()
     {
         return $this->guard;
     }
@@ -216,7 +216,7 @@ class Controller extends \App\Telenok\Core\Abstraction\Widget\Controller {
      *
      * @return string
      */
-    protected function getSocialite()
+    public function getSocialite()
     {
         return $this->socialite;
     }
@@ -226,7 +226,7 @@ class Controller extends \App\Telenok\Core\Abstraction\Widget\Controller {
      *
      * @return string
      */
-    protected function getRedirectPath()
+    public function getRedirectPath()
     {
         return $this->redirectPath;
     }
@@ -277,7 +277,7 @@ class Controller extends \App\Telenok\Core\Abstraction\Widget\Controller {
 
         $credentials = $this->getCredentials($request);
 
-        if (Auth::guard($this->getGuard())->attempt($credentials, $request->has('remember'))) {
+        if (app('auth')->guard($this->getGuard())->attempt($credentials, $request->has('remember'))) {
             return $this->buildSucessedResponse($request);
         }
 
@@ -289,6 +289,21 @@ class Controller extends \App\Telenok\Core\Abstraction\Widget\Controller {
         }
 
         $this->throwCredentialsException($request);
+    }
+
+    /**
+     * Get user logout.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    public function getLogout()
+    {
+        app('auth')->logout();
+
+        $redirect = urldecode($this->getRequest()->get('redirect')) ?: $this->getPreviousUrl();
+
+        return redirect()->intended($redirect);
     }
 
     /**
@@ -467,8 +482,44 @@ class Controller extends \App\Telenok\Core\Abstraction\Widget\Controller {
 
     public function redirectSocialNetwork($name = '')
     {
-        return app(\Telenok\Socialite\Contracts\Factory::class)->with($name)->redirect();
+        $this->getRequest()->session()->flash('redirectPath', $this->getRequest()->get('redirect_path'));
+
+        return app(\Telenok\Socialite\Contracts\Factory::class)
+            ->setConfig(['redirect' => route('telenok.auth.callback.social-network', ['name' => $name])])
+            ->with($name)->redirect();
     }
 
-    
+    public function callbackSocialNetwork($name = '')
+    {
+        $user = app(\Telenok\Socialite\Contracts\Factory::class)
+            ->setConfig(['redirect' => route('telenok.auth.callback.social-network', ['name' => $name])])
+            ->with($name)->user();
+
+        try
+        {
+            $cmsUser = \App\Telenok\Core\Model\User\User::where(function($query) use ($user)
+            {
+                $query->where('email', $user->getEmail());
+                $query->orWhere('username', $user->getEmail());
+            })
+            ->firstOrFail();
+
+            app('auth')->login($cmsUser, true);
+        }
+        catch(\Exception $e)
+        {
+            $cmsUser = app(\App\Telenok\Core\Model\User\User::class)->storeOrUpdate([
+                'title' => ($user->getNickname() ?: $user->getEmail()),
+                'username' => $user->getEmail(),
+                'email' => $user->getEmail(),
+                'usernick' => $user->getNickname(),
+                'firstname' => $user->getName(),
+                'active' => 1,
+            ]);
+
+            app('auth')->login($cmsUser, true);
+        }
+
+        return redirect()->intended(urldecode($this->getRequest()->session()->get('redirectPath', '/')));
+    }
 }

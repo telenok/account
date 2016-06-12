@@ -35,7 +35,7 @@
 
                     @if (config('services.' . $network . '.enabled'))
 
-                        <a href="{!! route('telenok.auth.redirect.social-network', ['name' => $network]) !!}" target="_blank">
+                        <a href="{!! route('telenok.auth.redirect.social-network', ['name' => $network, 'redirect_path' => urlencode($controller->getRedirectPath())]) !!}">
                             <img height="70" title="{{$network}}" src="/packages/telenok/account/image/{{$network}}.gif" />
                         </a>
 
@@ -53,7 +53,7 @@
         <div>
             <div>
                 <label>
-                    <input type="checkbox" name="remember"> Remember Me
+                    <input type="checkbox" name="remember" value="1"> Remember Me
                 </label>
             </div>
         </div>
