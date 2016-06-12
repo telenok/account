@@ -29,7 +29,7 @@ class SocialiteManager extends Manager implements Contracts\Factory
      */
     protected function createGithubDriver()
     {
-        $config = $this->app['config']['services.github'];
+        $config = array_merge($this->app['config']['services.github'], $this->getConfig());
 
         return $this->buildProvider(
             'Telenok\Account\Socialite\Two\GithubProvider', $config
@@ -43,7 +43,7 @@ class SocialiteManager extends Manager implements Contracts\Factory
      */
     protected function createFacebookDriver()
     {
-        $config = $this->app['config']['services.facebook'];
+        $config = array_merge($this->app['config']['services.facebook'], $this->getConfig());
 
         return $this->buildProvider(
             'Telenok\Account\Socialite\Two\FacebookProvider', $config
@@ -57,7 +57,7 @@ class SocialiteManager extends Manager implements Contracts\Factory
      */
     protected function createGoogleDriver()
     {
-        $config = $this->app['config']['services.google'];
+        $config = array_merge($this->app['config']['services.google'], $this->getConfig());
 
         return $this->buildProvider(
             'Telenok\Account\Socialite\Two\GoogleProvider', $config
@@ -71,7 +71,7 @@ class SocialiteManager extends Manager implements Contracts\Factory
      */
     protected function createLinkedinDriver()
     {
-        $config = $this->app['config']['services.linkedin'];
+        $config = array_merge($this->app['config']['services.linkedin'], $this->getConfig());
 
         return $this->buildProvider(
           'Telenok\Account\Socialite\Two\LinkedInProvider', $config
@@ -87,6 +87,8 @@ class SocialiteManager extends Manager implements Contracts\Factory
      */
     public function buildProvider($provider, $config)
     {
+        $config = array_merge($config, $this->getConfig());
+
         return new $provider(
             $this->app['request'], $config['client_id'],
             $config['client_secret'], $config['redirect']
@@ -100,7 +102,7 @@ class SocialiteManager extends Manager implements Contracts\Factory
      */
     protected function createTwitterDriver()
     {
-        $config = $this->app['config']['services.twitter'];
+        $config = array_merge($this->app['config']['services.twitter'], $this->getConfig());
 
         return new TwitterProvider(
             $this->app['request'], new TwitterServer($this->formatConfig($config))
@@ -114,7 +116,7 @@ class SocialiteManager extends Manager implements Contracts\Factory
      */
     protected function createBitbucketDriver()
     {
-        $config = $this->app['config']['services.bitbucket'];
+        $config = array_merge($this->app['config']['services.bitbucket'], $this->getConfig());
 
         return new BitbucketProvider(
             $this->app['request'], new BitbucketServer($this->formatConfig($config))

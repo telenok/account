@@ -9,6 +9,12 @@ use Illuminate\Contracts\Foundation\Application;
  */
 class AccountServiceProvider extends ServiceProvider {
 
+    /**
+     * Create a new service provider instance.
+     *
+     * @param  \Illuminate\Contracts\Foundation\Application  $app
+     * @return void
+     */
     public function __construct(Application $app)
     {
         parent::__construct($app);
@@ -24,8 +30,10 @@ class AccountServiceProvider extends ServiceProvider {
      */
     public function boot()
     {
+        $this->publishes([realpath(__DIR__ . '/../../../public') => public_path('packages/telenok/account')], 'public');
         $this->publishes([realpath(__DIR__ . '/../../../resources/app') => app_path()], 'resourcesapp');
         $this->loadViewsFrom(realpath(__DIR__ . '/../../view'), 'account');
+        $this->loadTranslationsFrom(realpath(__DIR__ . '/../../lang'), 'account');
 
         include __DIR__ . '/../../config/routes.php';
     }
@@ -39,7 +47,7 @@ class AccountServiceProvider extends ServiceProvider {
     public function register()
     {
         $this->app->singleton('Telenok\Socialite\Contracts\Factory', function ($app) {
-            return new \App\Telenok\Socialite\SocialiteManager($app);
+            return new \App\Telenok\Account\Socialite\SocialiteManager($app);
         });
     }
 }

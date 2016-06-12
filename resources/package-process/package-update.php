@@ -22,3 +22,9 @@
         '--path' => 'vendor/telenok/account/src/migrations',
         '--force' => true
     ]);
+
+    $this->call('vendor:publish', [
+        '--tag' => ['public'],
+        '--provider' => 'Telenok\Account\AccountServiceProvider',
+        '--force' => true
+    ]);

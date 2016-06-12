@@ -26,6 +26,29 @@
         </div>
     </div>
 
+
+    <div>
+        <div>
+            <div>
+
+                @foreach(['github', 'facebook', 'google', 'linkedin', 'twitter', 'bitbucket'] as $network)
+
+                    @if (config('services.' . $network . '.enabled'))
+
+                        <a href="{!! route('telenok.auth.redirect.social-network', ['name' => $network]) !!}" target="_blank">
+                            <img height="70" title="{{$network}}" src="/packages/telenok/account/image/{{$network}}.gif" />
+                        </a>
+
+                    @endif
+
+                @endforeach
+
+
+            </div>
+        </div>
+    </div>
+
+
     <div>
         <div>
             <div>
@@ -40,18 +63,10 @@
         <div>
             <button type="submit">Login</button>
 
-            <a href="{!! route('auth.password-restore', ['locale' => config('app.locale')]) !!}">
+            <a href="{!! route('telenok.auth.password-restore', ['locale' => config('app.locale')]) !!}">
                 Forgot Your Password?
             </a>
 
-        </div>
-    </div>
-
-    <div>
-        <div>
-            <div>
-aadsda
-            </div>
         </div>
     </div>
 

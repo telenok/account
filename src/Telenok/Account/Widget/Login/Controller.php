@@ -464,4 +464,11 @@ class Controller extends \App\Telenok\Core\Abstraction\Widget\Controller {
     {
         return app(UrlGenerator::class)->previous();
     }
+
+    public function redirectSocialNetwork($name = '')
+    {
+        return app(\Telenok\Socialite\Contracts\Factory::class)->with($name)->redirect();
+    }
+
+    
 }

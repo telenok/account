@@ -14,7 +14,7 @@ class Controller extends \App\Telenok\Core\Abstraction\Setting\Controller {
      * Controller's key.
      * @member Telenok.Account.Setting.SocialNetwork.Controller
      */
-    protected $key = 'telenok.socialite';
+    protected $key = 'telenok.social.network';
     
     /**
      * @protected
@@ -25,6 +25,7 @@ class Controller extends \App\Telenok\Core\Abstraction\Setting\Controller {
     protected $defaultValue = [
         'services.github.client_id' => "",
         'services.github.client_secret' => "",
+        'services.github.redirect' => "",
         'services.github.enabled' => 0,
 
         'services.facebook.client_id' => "",
