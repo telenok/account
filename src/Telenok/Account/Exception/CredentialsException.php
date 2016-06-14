@@ -1,6 +1,6 @@
 <?php
 
-namespace Illuminate\Validation;
+namespace Telenok\Account\Exception;
 
 use Exception;
 

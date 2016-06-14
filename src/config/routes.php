@@ -8,3 +8,6 @@ app('router')->get('personal/account/redirect/social-network/{name}', array('as'
 app('router')->get('personal/account/login/social-network/callback/{name}', array('as' => 'telenok.auth.callback.social-network', 'uses' => 'App\Telenok\Account\Widget\Login\Controller@callbackSocialNetwork'));
 
 
+app('router')->post('personal/account/password-reset', array('as' => 'telenok.account.reset', 'uses' => 'App\Telenok\Account\Widget\ResetPassword\Controller@postResetLinkEmail'));
+app('router')->get('personal/account/password-reset/process/{token}', array('as' => 'telenok.account.reset.process', 'uses' => 'App\Telenok\Account\Widget\ResetPassword\Controller@redirectToResetForm'));
+app('router')->post('personal/account/password-reset/finish', array('as' => 'telenok.account.reset.finish', 'uses' => 'App\Telenok\Account\Widget\ResetPassword\Controller@reset'));

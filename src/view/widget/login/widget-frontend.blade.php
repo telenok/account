@@ -1,6 +1,6 @@
 @if (count($errors) > 0)
-    <div class="alert alert-danger">
-        <strong>Whoops!</strong> There were some problems with your input.<br><br>
+    <div>
+        {!! $controller->LL('error.login.input') !!}<br><br>
         <ul>
             @foreach ($errors->all() as $error)
                 <li>{{ $error }}</li>
@@ -13,14 +13,14 @@
     <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
     <div>
-        <label>E-Mail Address</label>
+        <label>{{ $controller->LL('title.login.email') }}</label>
         <div>
             <input type="text" name="{{$controller->getLoginUsername()}}" value="">
         </div>
     </div>
 
     <div>
-        <label>Password</label>
+        <label>{{ $controller->LL('title.login.password') }}</label>
         <div>
             <input type="password" name="password">
         </div>
@@ -53,7 +53,7 @@
         <div>
             <div>
                 <label>
-                    <input type="checkbox" name="remember" value="1"> Remember Me
+                    <input type="checkbox" name="remember" value="1"> {{ $controller->LL('title.login.remember-me') }}
                 </label>
             </div>
         </div>
@@ -61,10 +61,10 @@
 
     <div>
         <div>
-            <button type="submit">Login</button>
+            <button type="submit">{{$controller->LL('btn.login.send')}}</button>
 
             <a href="{!! route('telenok.auth.password-restore', ['locale' => config('app.locale')]) !!}">
-                Forgot Your Password?
+                {{$controller->LL('title.login.forgot-password')}}
             </a>
 
         </div>

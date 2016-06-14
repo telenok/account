@@ -9,6 +9,11 @@
         '--provider' => 'Telenok\Account\AccountServiceProvider',
     ]);
 
+    $this->call('telenok:package', [
+        'action' => 'add-provider',
+        '--provider' => 'Telenok\Account\AccountDeferredServiceProvider',
+    ]);
+
     $this->line('Package new classes copy');
 
     $this->call('vendor:publish', [

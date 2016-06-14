@@ -2,6 +2,8 @@
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Contracts\Foundation\Application;
+use App\Telenok\Account\Broker\PasswordBrokerManager;
+
 /**
  * @class Telenok.Account.AccountServiceProvider
  * Core service provider.
@@ -46,8 +48,12 @@ class AccountServiceProvider extends ServiceProvider {
      */
     public function register()
     {
-        $this->app->singleton('Telenok\Socialite\Contracts\Factory', function ($app) {
+        $this->app->singleton(\Telenok\Socialite\Contracts\Factory::class, function ($app) {
             return new \App\Telenok\Account\Socialite\SocialiteManager($app);
+        });
+
+        $this->app->singleton('auth.password', function ($app) {
+            return new PasswordBrokerManager($app);
         });
     }
 }

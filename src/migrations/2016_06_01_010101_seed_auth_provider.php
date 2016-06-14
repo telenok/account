@@ -21,6 +21,13 @@ class SeedAuthProvider extends Migration {
             'controller_class' => '\App\Telenok\Account\Widget\Login\Controller',
         ]);
 
+        // Widget
+        (new \App\Telenok\Core\Model\Web\Widget())->storeOrUpdate([
+            'title' => ['en' => 'Reset password', 'ru' => 'Восстановление пароля'],
+            'active' => 1,
+            'controller_class' => '\App\Telenok\Account\Widget\ResetPassword\Controller',
+        ]);
+
         // Social network setting
         (new \App\Telenok\Core\Model\System\Setting())->storeOrUpdate([
             'title' => ['en' => 'Socialite settings', 'ru' => 'Настройки социальных сетей'],
