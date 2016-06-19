@@ -35,20 +35,28 @@ class Controller extends \App\Telenok\Core\Abstraction\Widget\Controller {
      * Name of view for fronend if user dont want to create own view.
      * @member Telenok.Account.Widget.ResetPassword.Controller
      */
-    protected $defaultFrontendView = "account::widget.reset-password.widget-frontend-email";
+    protected $defaultFrontendView = "";
 
     /**
      * @protected
-     * @property {String} $defaultFrontendView
-     * Name of view for fronend if user dont want to create own view.
+     * @property {String} $initialFrontendView
+     * Name of initial view
      * @member Telenok.Account.Widget.ResetPassword.Controller
      */
-    protected $emailFrontendView = "account::widget.reset-password.email.password";
+    protected $initialFrontendView = "account::widget.reset-password.widget-frontend-initial";
 
     /**
      * @protected
-     * @property {String} $defaultFrontendView
-     * Name of view for fronend if user dont want to create own view.
+     * @property {String} $emailFrontendView
+     * Name of email view for the given token to display the password changing link
+     * @member Telenok.Account.Widget.ResetPassword.Controller
+     */
+    protected $emailFrontendView = "account::widget.reset-password.widget-frontend-email";
+
+    /**
+     * @protected
+     * @property {String} $resetFrontendView
+     * Name of reset view for the given token to display the password changing
      * @member Telenok.Account.Widget.ResetPassword.Controller
      */
     protected $resetFrontendView = "account::widget.reset-password.widget-frontend-reset";
@@ -60,6 +68,14 @@ class Controller extends \App\Telenok\Core\Abstraction\Widget\Controller {
      * @member Telenok.Account.Widget.ResetPassword.Controller
      */
     protected $redirectResetEmail = "";
+
+    /**
+     * @protected
+     * @property {String} $redirectAfterReset
+     * Url where redirect user after pasword reset.
+     * @member Telenok.Account.Widget.ResetPassword.Controller
+     */
+    protected $redirectAfterReset = "";
 
     /**
      * @protected
@@ -119,34 +135,35 @@ class Controller extends \App\Telenok\Core\Abstraction\Widget\Controller {
      */
     public function setConfig($config = [])
     {
-        parent::setConfig($config);
+        parent::setConfig(array_merge($config, [
+            'route_reset'           => array_get($config, 'route_reset', $this->routeReset),
+            'broker'                => array_get($config, 'broker', $this->broker),
+            'guard'                 => array_get($config, 'guard', $this->guard),
+            'email_from'            => array_get($config, 'email_from', $this->emailFrom),
+            'email_sender_name'     => array_get($config, 'email_sender_name', $this->emailSenderName),
+            'email_subject'         => array_get($config, 'email_subject', $this->emailSubject),
+            'initial_frontend_view' => array_get($config, 'initial_frontend_view', $this->initialFrontendView),
+            'reset_frontend_view'   => array_get($config, 'reset_frontend_view', $this->resetFrontendView),
+            'email_frontend_view'   => array_get($config, 'email_frontend_view', $this->emailFrontendView),
+            'redirect_reset_email'  => array_get($config, 'redirect_reset_email', $this->redirectResetEmail),
+            'redirect_after_reset'  => array_get($config, 'redirect_after_reset', $this->redirectAfterReset),
+        ]));
 
-        if ($m = $this->getWidgetModel())
-        {
-            $structure = $m->structure;
-
-            $this->routeReset = array_get($structure, 'route_reset');
-            $this->broker = array_get($structure, 'broker');
-            $this->guard = array_get($structure, 'guard');
-            $this->emailFrom = array_get($structure, 'email_from');
-            $this->emailSenderName = array_get($structure, 'email_sender_name');
-            $this->emailSubject = array_get($structure, 'email_subject');
-            $this->resetFrontendView = array_get($structure, 'reset_frontend_view');
-            $this->emailFrontendView = array_get($structure, 'email_frontend_view');
-            $this->redirectResetEmail = array_get($structure, 'redirect_reset_email');
-        }
-        else
-        {
-            $this->routeReset = $this->getConfig('route_reset', $this->routeReset);
-            $this->broker = $this->getConfig('broker', $this->broker);
-            $this->guard = $this->getConfig('guard', $this->guard);
-            $this->emailFrom = $this->getConfig('email_from', $this->emailFrom);
-            $this->emailSenderName = $this->getConfig('email_sender_name', $this->emailSenderName);
-            $this->emailSubject = $this->getConfig('email_subject', $this->emailSubject);
-            $this->resetFrontendView = $this->getConfig('reset_frontend_view', $this->resetFrontendView);
-            $this->emailFrontendView = $this->getConfig('email_frontend_view', $this->emailFrontendView);
-            $this->redirectResetEmail = $this->getConfig('redirect_reset_email', $this->redirectResetEmail);
-        }
+        /*
+         * We can restore widget config from cache by cache_key, so set object member value manually
+         *
+         */
+        $this->routeReset           = $this->getConfig('route_reset');
+        $this->broker               = $this->getConfig('broker');
+        $this->guard                = $this->getConfig('guard');
+        $this->emailFrom            = $this->getConfig('email_from');
+        $this->emailSenderName      = $this->getConfig('email_sender_name');
+        $this->emailSubject         = $this->getConfig('email_subject');
+        $this->initialFrontendView  = $this->getConfig('initial_frontend_view');
+        $this->resetFrontendView    = $this->getConfig('reset_frontend_view');
+        $this->emailFrontendView    = $this->getConfig('email_frontend_view');
+        $this->redirectResetEmail   = $this->getConfig('redirect_reset_email');
+        $this->redirectAfterReset   = $this->getConfig('redirect_after_reset');
 
         return $this;
     }
@@ -240,6 +257,28 @@ class Controller extends \App\Telenok\Core\Abstraction\Widget\Controller {
     }
 
     /**
+     * Get redirect after reset
+     *
+     * @return string
+     * @member Telenok.Account.Widget.ResetPassword.Controller
+     */
+    public function getRedirectAfterReset()
+    {
+        return $this->redirectAfterReset;
+    }
+
+    /**
+     * Get initial form view
+     *
+     * @return string
+     * @member Telenok.Account.Widget.ResetPassword.Controller
+     */
+    public function getInitialFrontendView()
+    {
+        return $this->initialFrontendView;
+    }
+
+    /**
      * Get email view for the given token to display the password changing link
      *
      * @return string
@@ -261,7 +300,7 @@ class Controller extends \App\Telenok\Core\Abstraction\Widget\Controller {
     {
         try
         {
-            return $this->sendResetLinkEmail($request);
+            return $this->setConfig(['cache_key' => $request->get('cache_key')])->sendResetLinkEmail($request);
         }
         catch (ValidationException $e)
         {
@@ -312,7 +351,7 @@ class Controller extends \App\Telenok\Core\Abstraction\Widget\Controller {
             return view($this->getResetFrontendView(), ['controller' => $this])->with(compact('token', 'email'));
         }
 
-        return view($this->getFrontendView(), ['controller' => $this])->render();
+        return view($this->getInitialFrontendView(), ['controller' => $this])->render();
     }
 
     /**
@@ -322,7 +361,7 @@ class Controller extends \App\Telenok\Core\Abstraction\Widget\Controller {
      */
     public function redirectToResetForm(Request $request, $token)
     {
-        return redirect()->to($request->get('redirect'))->withInput([
+        return redirect()->to($this->setConfig(['cache_key' => $request->get('cache_key')])->getRedirectResetEmail())->withInput([
             'token' => $token,
             'email' => $request->get('email'),
         ]);
@@ -337,6 +376,7 @@ class Controller extends \App\Telenok\Core\Abstraction\Widget\Controller {
      */
     public function reset(Request $request)
     {
+        $this->setConfig(['cache_key' => $request->get('cache_key')]);
         $this->validate($request, $this->getResetValidationRules());
 
         $credentials = $request->only(
@@ -423,7 +463,7 @@ class Controller extends \App\Telenok\Core\Abstraction\Widget\Controller {
      */
     protected function getResetSuccessResponse($response)
     {
-        return redirect()->back()->with('status', trans($response));
+        return $this->getRedirectAfterReset() ?: redirect()->back()->with('status', trans($response));
     }
 
     /**
@@ -437,7 +477,7 @@ class Controller extends \App\Telenok\Core\Abstraction\Widget\Controller {
     protected function getResetFailureResetResponse(Request $request, $response)
     {
         return redirect()->back()
-            ->withInput($request->only('email', 'token'))
+            ->withInput($request->only('email', 'token', 'cache_key'))
             ->withErrors(['email' => trans($response)]);
     }
 

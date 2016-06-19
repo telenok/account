@@ -114,30 +114,23 @@ class Controller extends \App\Telenok\Core\Abstraction\Widget\Controller {
      */
     public function setConfig($config = [])
     {
-        parent::setConfig($config);
+        parent::setConfig(array_merge($config, [
+            'route_login'           => array_get($config, 'route_login', $this->routeLogin),
+            'login_username'        => array_get($config, 'login_username', $this->loginUsername),
+            'max_login_attempts'    => array_get($config, 'max_login_attempts', $this->maxLoginAttempts),
+            'lockout_time'          => array_get($config, 'lockout_time', $this->lockoutTime),
+            'guard'                 => array_get($config, 'guard', $this->guard),
+            'redirect_path'         => array_get($config, 'redirect_path', $this->redirectPath),
+            'socialite'             => array_get($config, 'socialite', $this->socialite),
+        ]));
 
-        if ($m = $this->getWidgetModel())
-        {
-            $structure = $m->structure;
-
-            $this->routeLogin = array_get($structure, 'route_login');
-            $this->loginUsername = array_get($structure, 'login_username');
-            $this->maxLoginAttempts = array_get($structure, 'max_login_attempts');
-            $this->lockoutTime = array_get($structure, 'lockout_time');
-            $this->guard = array_get($structure, 'guard');
-            $this->redirectPath = array_get($structure, 'redirect_path');
-            $this->socialite = array_get($structure, 'socialite');
-        }
-        else
-        {
-            $this->routeLogin = $this->getConfig('route_login', $this->routeLogin);
-            $this->loginUsername = $this->getConfig('login_username', $this->loginUsername);
-            $this->maxLoginAttempts = $this->getConfig('max_login_attempts', $this->maxLoginAttempts);
-            $this->lockoutTime = $this->getConfig('lockout_time', $this->lockoutTime);
-            $this->guard = $this->getConfig('guard', $this->guard);
-            $this->redirectPath = $this->getConfig('redirect_path', $this->redirectPath);
-            $this->socialite = $this->getConfig('socialite', $this->socialite);
-        }
+        $this->routeLogin = $this->getConfig('route_login');
+        $this->loginUsername = $this->getConfig('login_username');
+        $this->maxLoginAttempts = $this->getConfig('max_login_attempts');
+        $this->lockoutTime = $this->getConfig('lockout_time');
+        $this->guard = $this->getConfig('guard');
+        $this->redirectPath = $this->getConfig('redirect_path');
+        $this->socialite = $this->getConfig('socialite');
 
         return $this;
     }
@@ -172,7 +165,7 @@ class Controller extends \App\Telenok\Core\Abstraction\Widget\Controller {
      */
     public function loginUsername()
     {
-        return $this->loginUsername;
+        return $this->getLoginUsername();
     }
 
     /**

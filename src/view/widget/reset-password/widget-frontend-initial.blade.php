@@ -1,6 +1,12 @@
 <div>
-    <div>{{$controller->LL('header.finish')}}</div>
+    <div>{{$controller->LL('header.reset')}}</div>
     <div>
+        @if (session('status'))
+            <div>
+                {{ session('status') }}
+            </div>
+        @endif
+
         @if (count($errors) > 0)
             <div>
                 {!! $controller->LL('error.reset.input') !!}<br><br>
@@ -12,28 +18,14 @@
             </div>
         @endif
 
-        <form method="POST" action="{!! route('telenok.account.reset.finish') !!}">
+        <form method="POST" action="{!! route($controller->getRouteReset()) !!}">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
-            <input type="hidden" name="token" value="{{ old('token') }}">
+            <input type="hidden" name="cache_key" value="{{ $controller->getConfig('cache_key') }}">
 
             <div>
-                <label>{{$controller->LL('title.finish.email')}}</label>
+                <label>{{$controller->LL('title.reset.email')}}</label>
                 <div>
                     <input type="email" name="email" value="{{ old('email') }}">
-                </div>
-            </div>
-
-            <div>
-                <label>{{$controller->LL('title.finish.password')}}</label>
-                <div>
-                    <input type="password" name="password">
-                </div>
-            </div>
-
-            <div>
-                <label>{{$controller->LL('title.finish.password-confirm')}}</label>
-                <div>
-                    <input type="password" name="password_confirmation">
                 </div>
             </div>
 

@@ -128,7 +128,7 @@ trait ValidatesRequests {
             return new JsonResponse(['success' => 1], 200);
         }
 
-        return redirect()->intended($this->getRedirectPath());
+        return redirect()->intended($this->getRequest()->get('redirect') ?: '/');
     }
 
     /**

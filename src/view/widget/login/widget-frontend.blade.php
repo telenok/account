@@ -11,7 +11,7 @@
 
 <form method="POST" action="{!! route($controller->getRouteLogin()) !!}">
     <input type="hidden" name="_token" value="{{ csrf_token() }}">
-
+    <input type="hidden" name="redirect" value="{{ $controller->getRedirectPath() }}">
     <div>
         <label>{{ $controller->LL('title.login.email') }}</label>
         <div>

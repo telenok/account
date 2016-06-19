@@ -8,7 +8,7 @@ return array(
     'email.reset' => '<a href=":url">Click here</a> to reset your password.',
 
     'header.reset' => 'Reset Password',
-    'header.finish' => 'Finish reset password',
+    'header.finish' => 'Reset Password',
 
     'title.reset.email' => 'E-Mail Address',
     'title.finish.email' => 'E-Mail Address',
