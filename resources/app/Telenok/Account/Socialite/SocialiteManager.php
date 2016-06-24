@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Telenok\Account\Socialite;
+namespace App\Vendor\Telenok\Account\Socialite;
 
 class SocialiteManager extends \Telenok\Account\Socialite\SocialiteManager
 {

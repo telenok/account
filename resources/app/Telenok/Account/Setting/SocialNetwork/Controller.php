@@ -1,4 +1,4 @@
-<?php namespace App\Telenok\Account\Setting\SocialNetwork;
+<?php namespace App\Vendor\Telenok\Account\Setting\SocialNetwork;
 
 /**
  * @class App.Telenok.Account.Setting.SocialNetwork.Controller

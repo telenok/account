@@ -9,7 +9,7 @@ use Telenok\Account\Exception\LockoutException;
 use Telenok\Account\Abstraction\ValidatesRequests;
 use Illuminate\Validation\ValidationException;
 
-class Controller extends \App\Telenok\Core\Abstraction\Widget\Controller {
+class Controller extends \App\Vendor\Telenok\Core\Abstraction\Widget\Controller {
 
     use ThrottlesLogins, ValidatesRequests;
 
@@ -370,7 +370,7 @@ class Controller extends \App\Telenok\Core\Abstraction\Widget\Controller {
 
         try
         {
-            $cmsUser = \App\Telenok\Core\Model\User\User::where(function($query) use ($user)
+            $cmsUser = \App\Vendor\Telenok\Core\Model\User\User::where(function($query) use ($user)
             {
                 $query->where('email', $user->getEmail());
                 $query->orWhere('username', $user->getEmail());
@@ -381,7 +381,7 @@ class Controller extends \App\Telenok\Core\Abstraction\Widget\Controller {
         }
         catch(\Exception $e)
         {
-            $cmsUser = app(\App\Telenok\Core\Model\User\User::class)->storeOrUpdate([
+            $cmsUser = app(\App\Vendor\Telenok\Core\Model\User\User::class)->storeOrUpdate([
                 'title' => ($user->getNickname() ?: $user->getEmail()),
                 'username' => $user->getEmail(),
                 'email' => $user->getEmail(),

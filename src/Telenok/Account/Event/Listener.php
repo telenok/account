@@ -12,7 +12,7 @@ class Listener {
 
     public function onRepositorySetting(RepositorySetting $event)
     {
-        $event->getList()->push('App\Telenok\Account\Setting\SocialNetwork\Controller');
+        $event->getList()->push(\App\Vendor\Telenok\Account\Setting\SocialNetwork\Controller::class);
     }
 
     public function subscribe($events)
@@ -24,16 +24,16 @@ class Listener {
     public function addListenerRepositoryPackage($events)
     {
         $events->listen(
-            'App\Telenok\Core\Event\RepositoryPackage',
-            'App\Telenok\Account\Event\Listener@onRepositoryPackage'
+            'Telenok\Core\Event\RepositoryPackage',
+            'App\Vendor\Telenok\Account\Event\Listener@onRepositoryPackage'
         );
     }
 
     public function addListenerRepositorySetting($events)
     {
         $events->listen(
-            'App\Telenok\Core\Event\RepositorySetting',
-            'App\Telenok\Account\Event\Listener@onRepositorySetting'
+            'Telenok\Core\Event\RepositorySetting',
+            'App\Vendor\Telenok\Account\Event\Listener@onRepositorySetting'
         );
     }
 }

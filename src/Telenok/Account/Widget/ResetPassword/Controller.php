@@ -7,9 +7,9 @@ use Illuminate\Validation\ValidationException;
 use Telenok\Account\Abstraction\ValidatesRequests;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Mail\Message;
-use App\Telenok\Account\Broker\PasswordBroker;
+use App\Vendor\Telenok\Account\Broker\PasswordBroker;
 
-class Controller extends \App\Telenok\Core\Abstraction\Widget\Controller {
+class Controller extends \App\Vendor\Telenok\Core\Abstraction\Widget\Controller {
 
     use ValidatesRequests;
 

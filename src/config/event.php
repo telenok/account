@@ -7,6 +7,6 @@ app('events')->listen('telenok.repository.package', function($list)
 
 app('events')->listen('telenok.repository.setting', function($list)
 {
-    $list->push('App\Telenok\Account\Setting\SocialNetwork\Controller');
+    $list->push('App\Vendor\Telenok\Account\Setting\SocialNetwork\Controller');
 });
 */

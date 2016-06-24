@@ -2,7 +2,7 @@
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Contracts\Foundation\Application;
-use App\Telenok\Account\Broker\PasswordBrokerManager;
+use App\Vendor\Telenok\Account\Broker\PasswordBrokerManager;
 
 /**
  * @class Telenok.Account.AccountServiceProvider

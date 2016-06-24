@@ -2,7 +2,7 @@
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Contracts\Foundation\Application;
-use App\Telenok\Account\Broker\PasswordBrokerManager;
+use App\Vendor\Telenok\Account\Broker\PasswordBrokerManager;
 
 /**
  * @class Telenok.Account.AccountServiceProvider
@@ -11,19 +11,6 @@ use App\Telenok\Account\Broker\PasswordBrokerManager;
  */
 class AccountServiceProvider extends ServiceProvider {
 
-    /**
-     * Create a new service provider instance.
-     *
-     * @param  \Illuminate\Contracts\Foundation\Application  $app
-     * @return void
-
-    public function __construct(Application $app)
-    {
-        parent::__construct($app);
-
-        include __DIR__ . '/../../config/event.php';
-    }
-     */
     /**
      * @method boot
      * Load config, routers, create singletons and others.
@@ -49,7 +36,7 @@ class AccountServiceProvider extends ServiceProvider {
     public function register()
     {
         $this->app->singleton(\Telenok\Socialite\Contracts\Factory::class, function ($app) {
-            return new \App\Telenok\Account\Socialite\SocialiteManager($app);
+            return new \App\Vendor\Telenok\Account\Socialite\SocialiteManager($app);
         });
 
         $this->app->singleton('auth.password', function ($app) {
