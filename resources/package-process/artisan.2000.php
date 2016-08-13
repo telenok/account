@@ -1,12 +1,12 @@
 <?php
 
-    app()->register('App\Vendor\Telenok\Account\CoreServiceProvider');
+    app()->register('App\Vendor\Telenok\Account\AccountServiceProvider');
 
     $this->line('Package assets publishing');
 
     $this->call('vendor:publish', [
         '--tag' => ['public'],
-        '--provider' => 'App\Vendor\Telenok\Account\CoreServiceProvider',
+        '--provider' => 'App\Vendor\Telenok\Account\AccountServiceProvider',
         '--force' => true
     ]);
 
