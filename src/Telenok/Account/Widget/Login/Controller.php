@@ -114,6 +114,8 @@ class Controller extends \App\Vendor\Telenok\Core\Abstraction\Widget\Controller 
      */
     public function setConfig($config = [])
     {
+        $config = collect($config)->all();
+        
         parent::setConfig(array_merge($config, [
             'route_login'           => array_get($config, 'route_login', $this->routeLogin),
             'login_username'        => array_get($config, 'login_username', $this->loginUsername),

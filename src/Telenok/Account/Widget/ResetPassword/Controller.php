@@ -135,6 +135,8 @@ class Controller extends \App\Vendor\Telenok\Core\Abstraction\Widget\Controller 
      */
     public function setConfig($config = [])
     {
+        $config = collect($config)->all();
+        
         parent::setConfig(array_merge($config, [
             'route_reset'           => array_get($config, 'route_reset', $this->routeReset),
             'broker'                => array_get($config, 'broker', $this->broker),
