@@ -18,9 +18,9 @@
         "php": ">=7.0",
         "telenok/core": "1.0.x-dev",
         "guzzlehttp/guzzle": "~5.0|~6.0",
-        "illuminate/contracts": "~5.3.*",
-        "illuminate/http": "~5.3.*",
-        "illuminate/support": "~5.3.*",
+        "illuminate/contracts": "~5.3",
+        "illuminate/http": "~5.3",
+        "illuminate/support": "~5.3",
         "league/oauth1-client": "~1.0"
     },
     "autoload": {
