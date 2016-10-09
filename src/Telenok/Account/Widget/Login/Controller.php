@@ -374,8 +374,8 @@ class Controller extends \App\Vendor\Telenok\Core\Abstraction\Widget\Controller 
         {
             $cmsUser = \App\Vendor\Telenok\Core\Model\User\User::where(function($query) use ($user)
             {
-                $query->where('email', $user->getEmail());
-                $query->orWhere('username', $user->getEmail());
+                $query->where('email', (string)$user->getEmail());
+                $query->orWhere('username', (string)$user->getEmail());
             })
             ->firstOrFail();
 
