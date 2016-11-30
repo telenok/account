@@ -1,9 +1,9 @@
-<?php namespace App\Vendor\Telenok\Account\Setting\SocialNetwork;
+<?php namespace App\Vendor\Telenok\Account\Config\SocialNetwork;
 
 /**
- * @class App.Telenok.Account.Setting.SocialNetwork.Controller
- * Controller social network setting.
+ * @class App.Telenok.Account.Config.SocialNetwork.Controller
+ * Controller social network config.
  * 
- * @extends Telenok.Account.Setting.SocialNetwork.Controller
+ * @extends Telenok.Account.Config.SocialNetwork.Controller
  */
-class Controller extends \Telenok\Account\Setting\SocialNetwork\Controller {}
+class Controller extends \Telenok\Account\Config\SocialNetwork\Controller {}

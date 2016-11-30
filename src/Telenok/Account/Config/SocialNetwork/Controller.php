@@ -1,26 +1,26 @@
-<?php namespace Telenok\Account\Setting\SocialNetwork;
+<?php namespace Telenok\Account\Config\SocialNetwork;
 
 /**
- * @class Telenok.Account.Setting.SocialNetwork.Controller
- * Controller social network setting.
+ * @class Telenok.Account.Config.SocialNetwork.Controller
+ * Controller social network config.
  * 
- * @extends Telenok.Core.Abstraction.Setting.Controller
+ * @extends Telenok.Core.Abstraction.Config.Controller
  */
-class Controller extends \App\Vendor\Telenok\Core\Abstraction\Setting\Controller {
+class Controller extends \App\Vendor\Telenok\Core\Abstraction\Config\Controller {
 
     /**
      * @protected
      * @property {String} $key
      * Controller's key.
-     * @member Telenok.Account.Setting.SocialNetwork.Controller
+     * @member Telenok.Account.Config.SocialNetwork.Controller
      */
     protected $key = 'telenok.social.network';
     
     /**
      * @protected
      * @property {Array} $defaultValue
-     * Default values for current settings.
-     * @member Telenok.Account.Setting.SocialNetwork.Controller
+     * Default values for current config.
+     * @member Telenok.Account.Config.SocialNetwork.Controller
      */
     protected $defaultValue = [
         'services.github.client_id' => "",
