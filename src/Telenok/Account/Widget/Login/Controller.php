@@ -9,7 +9,8 @@ use Telenok\Account\Exception\LockoutException;
 use Telenok\Account\Abstraction\ValidatesRequests;
 use Illuminate\Validation\ValidationException;
 
-class Controller extends \App\Vendor\Telenok\Core\Abstraction\Widget\Controller {
+class Controller extends \App\Vendor\Telenok\Core\Abstraction\Widget\Controller
+{
 
     use ThrottlesLogins, ValidatesRequests;
 
@@ -39,11 +40,12 @@ class Controller extends \App\Vendor\Telenok\Core\Abstraction\Widget\Controller 
 
     /**
      * @protected
-     * @property {String} $loginUsername
-     * Value of attribute "name" in login input-field. Used for searching user in DB etc. Can be also "email" and others.
+     * @property {String} $usernameField
+     * Value of attribute "name" in login input-field. Used for searching user in DB etc. Can be also "email" and
+     *     others.
      * @member Telenok.Account.Widget.Login.Controller
      */
-    protected $loginUsername = "username";
+    protected $usernameField = "username";
 
     /**
      * @protected
@@ -79,11 +81,11 @@ class Controller extends \App\Vendor\Telenok\Core\Abstraction\Widget\Controller 
 
     /**
      * @protected
-     * @property {String} $redirectPath
+     * @property {String} $redirect
      * The post login redirect path.
      * @member Telenok.Account.Widget.Login.Controller
      */
-    protected $redirectPath;
+    protected $redirect;
 
     /**
      * @protected
@@ -108,30 +110,32 @@ class Controller extends \App\Vendor\Telenok\Core\Abstraction\Widget\Controller 
     /**
      * @method setConfig
      * Set config of widget
+     *
      * @param {Array} $config
+     *
      * @member Telenok.Account.Widget.Login.Controller
      * @return {Telenok.Account.Widget.Login.Controller}
      */
     public function setConfig($config = [])
     {
         $config = collect($config)->all();
-        
+
         parent::setConfig(array_merge($config, [
-            'route_login'           => array_get($config, 'route_login', $this->routeLogin),
-            'login_username'        => array_get($config, 'login_username', $this->loginUsername),
-            'max_login_attempts'    => array_get($config, 'max_login_attempts', $this->maxLoginAttempts),
-            'lockout_time'          => array_get($config, 'lockout_time', $this->lockoutTime),
-            'guard'                 => array_get($config, 'guard', $this->guard),
-            'redirect_path'         => array_get($config, 'redirect_path', $this->redirectPath),
-            'socialite'             => array_get($config, 'socialite', $this->socialite),
+            'route_login'        => array_get($config, 'route_login', $this->routeLogin),
+            'username_field'     => array_get($config, 'username_field', $this->usernameField),
+            'max_login_attempts' => array_get($config, 'max_login_attempts', $this->maxLoginAttempts),
+            'lockout_time'       => array_get($config, 'lockout_time', $this->lockoutTime),
+            'guard'              => array_get($config, 'guard', $this->guard),
+            'redirect'           => array_get($config, 'redirect', $this->redirect),
+            'socialite'          => array_get($config, 'socialite', $this->socialite),
         ]));
 
         $this->routeLogin = $this->getConfig('route_login');
-        $this->loginUsername = $this->getConfig('login_username');
+        $this->usernameField = $this->getConfig('username_field');
         $this->maxLoginAttempts = $this->getConfig('max_login_attempts');
         $this->lockoutTime = $this->getConfig('lockout_time');
         $this->guard = $this->getConfig('guard');
-        $this->redirectPath = $this->getConfig('redirect_path');
+        $this->redirect = $this->getConfig('redirect');
         $this->socialite = $this->getConfig('socialite');
 
         return $this;
@@ -149,25 +153,14 @@ class Controller extends \App\Vendor\Telenok\Core\Abstraction\Widget\Controller 
     }
 
     /**
-     * @method getLoginUsername
-     * Return name of login input-field
+     * @method username
+     * For trait ThrottlesLogins
      * @member Telenok.Account.Widget.Login.Controller
      * @return {String}
      */
-    public function getLoginUsername()
+    public function username()
     {
-        return $this->loginUsername;
-    }
-
-    /**
-     * @method loginUsername
-     * Alias of getLoginUsername() for trait ThrottlesLogins
-     * @member Telenok.Account.Widget.Login.Controller
-     * @return {String}
-     */
-    public function loginUsername()
-    {
-        return $this->getLoginUsername();
+        return $this->usernameField;
     }
 
     /**
@@ -217,15 +210,16 @@ class Controller extends \App\Vendor\Telenok\Core\Abstraction\Widget\Controller 
      *
      * @return string
      */
-    public function getRedirectPath()
+    public function getRedirect()
     {
-        return $this->redirectPath;
+        return $this->redirect;
     }
 
     /**
      * Handle a login request to the application.
      *
      * @param  {Illuminate.Http.Request} $request
+     *
      * @return {Illuminate.Http.Response}
      * @member Telenok.Account.Widget.Login.Controller
      */
@@ -253,6 +247,7 @@ class Controller extends \App\Vendor\Telenok\Core\Abstraction\Widget\Controller 
      * Handle a login request to the application.
      *
      * @param  {Illuminate.Http.Request} $request
+     *
      * @return {Illuminate.Http.Response}
      * @member Telenok.Account.Widget.Login.Controller
      */
@@ -260,7 +255,8 @@ class Controller extends \App\Vendor\Telenok\Core\Abstraction\Widget\Controller 
     {
         $this->validateLogin($request);
 
-        if ($lockedOut = $this->hasTooManyLoginAttempts($request)) {
+        if ($lockedOut = $this->hasTooManyLoginAttempts($request))
+        {
             $this->fireLockoutEvent($request);
 
             $this->throwLockoutException($request);
@@ -268,14 +264,16 @@ class Controller extends \App\Vendor\Telenok\Core\Abstraction\Widget\Controller 
 
         $credentials = $this->getCredentials($request);
 
-        if (app('auth')->guard($this->getGuard())->attempt($credentials, $request->has('remember'))) {
+        if (app('auth')->guard($this->getGuard())->attempt($credentials, $request->has('remember')))
+        {
             return $this->buildSucessedResponse($request);
         }
 
         // If the login attempt was unsuccessful we will increment the number of attempts
         // to login and redirect the user back to the login form. Of course, when this
         // user surpasses their maximum number of attempts they will get locked out.
-        if (!$lockedOut) {
+        if (!$lockedOut)
+        {
             $this->incrementLoginAttempts($request);
         }
 
@@ -285,7 +283,8 @@ class Controller extends \App\Vendor\Telenok\Core\Abstraction\Widget\Controller 
     /**
      * Get user logout.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
+     *
      * @return array
      */
     public function getLogout()
@@ -300,24 +299,26 @@ class Controller extends \App\Vendor\Telenok\Core\Abstraction\Widget\Controller 
     /**
      * Get the needed authorization credentials from the request.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
+     *
      * @return array
      */
     protected function getCredentials(Request $request)
     {
-        return $request->only($this->getLoginUsername(), 'password');
+        return $request->only($this->username(), 'password');
     }
 
     /**
      * Validate the user login request.
      *
      * @param  {Illuminate.Http.Request} $request
+     *
      * @return void
      */
     protected function validateLogin(Request $request)
     {
         $this->validateRequest($request, [
-            $this->getLoginUsername() => 'required', 'password' => 'required',
+            $this->username() => 'required', 'password' => 'required',
         ]);
     }
 
@@ -325,6 +326,7 @@ class Controller extends \App\Vendor\Telenok\Core\Abstraction\Widget\Controller 
      * Format the lockout errors to be returned.
      *
      * @param {Illuminate.Http.Request} $request
+     *
      * @return array
      */
     protected function formatLockoutErrors(Request $request)
@@ -336,6 +338,7 @@ class Controller extends \App\Vendor\Telenok\Core\Abstraction\Widget\Controller 
      * Format the validation errors to be returned.
      *
      * @param {Illuminate.Http.Request} $request
+     *
      * @return array
      */
     protected function formatCredentialsErrors(Request $request)
@@ -347,11 +350,12 @@ class Controller extends \App\Vendor\Telenok\Core\Abstraction\Widget\Controller 
      * Redirect to social network site.
      *
      * @param {String} $name Key of social network
+     *
      * @return array
      */
     public function redirectSocialNetwork($name = '')
     {
-        $this->getRequest()->session()->flash('redirectPath', $this->getRequest()->get('redirect_path'));
+        $this->getRequest()->session()->flash('redirectPath', $this->getRedirect());
 
         return app(\Telenok\Socialite\Contracts\Factory::class)
             ->setConfig(['redirect' => route('telenok.auth.callback.social-network', ['name' => $name])])
@@ -362,6 +366,7 @@ class Controller extends \App\Vendor\Telenok\Core\Abstraction\Widget\Controller 
      * Process callback from social network site.
      *
      * @param {String} $name Key of social network
+     *
      * @return array
      */
     public function callbackSocialNetwork($name = '')
@@ -372,25 +377,25 @@ class Controller extends \App\Vendor\Telenok\Core\Abstraction\Widget\Controller 
 
         try
         {
-            $cmsUser = \App\Vendor\Telenok\Core\Model\User\User::where(function($query) use ($user)
+            $cmsUser = \App\Vendor\Telenok\Core\Model\User\User::where(function ($query) use ($user)
             {
                 $query->where('email', (string)$user->getEmail());
                 $query->orWhere('username', (string)$user->getEmail());
             })
-            ->firstOrFail();
+                ->firstOrFail();
 
             app('auth')->login($cmsUser, true);
         }
-        catch(\Exception $e)
+        catch (\Exception $e)
         {
             $cmsUser = app(\App\Vendor\Telenok\Core\Model\User\User::class)->storeOrUpdate([
-                'title' => ($user->getNickname() ?: $user->getEmail()),
-                'username' => $user->getEmail(),
-                'email' => $user->getEmail(),
-                'usernick' => $user->getNickname(),
+                'title'     => ($user->getNickname() ?: $user->getEmail()),
+                'username'  => $user->getEmail(),
+                'email'     => $user->getEmail(),
+                'usernick'  => $user->getNickname(),
                 'firstname' => $user->getName(),
-                'password' => bcrypt(uniqid()),
-                'active' => 1,
+                'password'  => bcrypt(uniqid()),
+                'active'    => 1,
             ]);
 
             app('auth')->login($cmsUser, true);

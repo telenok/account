@@ -11,11 +11,11 @@
 
 <form method="POST" action="{!! route($controller->getRouteLogin()) !!}">
     <input type="hidden" name="_token" value="{{ csrf_token() }}">
-    <input type="hidden" name="redirect" value="{{ $controller->getRedirectPath() }}">
+    <input type="hidden" name="redirect" value="{{ $controller->getRedirect() }}">
     <div>
         <label>{{ $controller->LL('title.login.email') }}</label>
         <div>
-            <input type="text" name="{{$controller->getLoginUsername()}}" value="">
+            <input type="text" name="{{$controller->username()}}" value="">
         </div>
     </div>
 
@@ -35,7 +35,7 @@
 
                     @if (config('services.' . $network . '.enabled'))
 
-                        <a href="{!! route('telenok.auth.redirect.social-network', ['name' => $network, 'redirect_path' => urlencode($controller->getRedirectPath())]) !!}">
+                        <a href="{!! route('telenok.auth.redirect.social-network', ['name' => $network, 'redirect' => urlencode($controller->getRedirect())]) !!}">
                             <img height="70" title="{{$network}}" src="/packages/telenok/account/image/{{$network}}.gif" />
                         </a>
 
