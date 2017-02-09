@@ -4,6 +4,8 @@ namespace Telenok\Account\Widget\Login;
 
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Http\Request;
+use App\Vendor\Telenok\Account\Factory\Provider;
+use App\Vendor\Telenok\Core\Model\User\User;
 use Telenok\Account\Exception\CredentialsException;
 use Telenok\Account\Exception\LockoutException;
 use Telenok\Account\Abstraction\ValidatesRequests;
@@ -73,19 +75,11 @@ class Controller extends \App\Vendor\Telenok\Core\Abstraction\Widget\Controller
 
     /**
      * @protected
-     * @property {String} $socialite
-     * The list of social networks like 'github, facebook, twitter'.
-     * @member Telenok.Account.Widget.Login.Controller
-     */
-    protected $socialite;
-
-    /**
-     * @protected
-     * @property {String} $redirect
+     * @property {String} $redirectAfterLogin
      * The post login redirect path.
      * @member Telenok.Account.Widget.Login.Controller
      */
-    protected $redirect;
+    protected $redirectAfterLogin;
 
     /**
      * @protected
@@ -126,8 +120,7 @@ class Controller extends \App\Vendor\Telenok\Core\Abstraction\Widget\Controller
             'max_login_attempts' => array_get($config, 'max_login_attempts', $this->maxLoginAttempts),
             'lockout_time'       => array_get($config, 'lockout_time', $this->lockoutTime),
             'guard'              => array_get($config, 'guard', $this->guard),
-            'redirect'           => array_get($config, 'redirect', $this->redirect),
-            'socialite'          => array_get($config, 'socialite', $this->socialite),
+            'redirect_after_login' => array_get($config, 'redirect_after_login', $this->redirectAfterLogin),
         ]));
 
         $this->routeLogin = $this->getConfig('route_login');
@@ -135,8 +128,7 @@ class Controller extends \App\Vendor\Telenok\Core\Abstraction\Widget\Controller
         $this->maxLoginAttempts = $this->getConfig('max_login_attempts');
         $this->lockoutTime = $this->getConfig('lockout_time');
         $this->guard = $this->getConfig('guard');
-        $this->redirect = $this->getConfig('redirect');
-        $this->socialite = $this->getConfig('socialite');
+        $this->redirectAfterLogin = $this->getConfig('redirect_after_login');
 
         return $this;
     }
@@ -196,23 +188,13 @@ class Controller extends \App\Vendor\Telenok\Core\Abstraction\Widget\Controller
     }
 
     /**
-     * Get the list with social networks.
-     *
-     * @return string
-     */
-    public function getSocialite()
-    {
-        return $this->socialite;
-    }
-
-    /**
      * Get the post login redirect path.
      *
      * @return string
      */
-    public function getRedirect()
+    public function getRedirectAfterLogin()
     {
-        return $this->redirect;
+        return $this->redirectAfterLogin;
     }
 
     /**
@@ -251,7 +233,7 @@ class Controller extends \App\Vendor\Telenok\Core\Abstraction\Widget\Controller
      * @return {Illuminate.Http.Response}
      * @member Telenok.Account.Widget.Login.Controller
      */
-    public function login(Request $request)
+    protected function login(Request $request)
     {
         $this->validateLogin($request);
 
@@ -353,13 +335,13 @@ class Controller extends \App\Vendor\Telenok\Core\Abstraction\Widget\Controller
      *
      * @return array
      */
-    public function redirectSocialNetwork($name = '')
+    public function redirectToProvider($name = '')
     {
-        $this->getRequest()->session()->flash('redirectPath', $this->getRedirect());
+        $this->getRequest()->session()->flash('redirectPath', app('request')->get('redirect'));
 
-        return app(\Telenok\Socialite\Contracts\Factory::class)
-            ->setConfig(['redirect' => route('telenok.auth.callback.social-network', ['name' => $name])])
-            ->with($name)->redirect();
+        return app(Provider::class)
+                    ->create($name, ['redirect' => route('telenok.account.callback.social-network', ['name' => $name])])
+                    ->redirect();
     }
 
     /**
@@ -369,32 +351,32 @@ class Controller extends \App\Vendor\Telenok\Core\Abstraction\Widget\Controller
      *
      * @return array
      */
-    public function callbackSocialNetwork($name = '')
+    public function handleProviderCallback($name = '')
     {
-        $user = app(\Telenok\Socialite\Contracts\Factory::class)
-            ->setConfig(['redirect' => route('telenok.auth.callback.social-network', ['name' => $name])])
-            ->with($name)->user();
+        $user = app(Provider::class)
+            ->create($name)
+            ->user();
 
         try
         {
-            $cmsUser = \App\Vendor\Telenok\Core\Model\User\User::where(function ($query) use ($user)
+            $cmsUser = User::where(function ($query) use ($user)
             {
                 $query->where('email', (string)$user->getEmail());
                 $query->orWhere('username', (string)$user->getEmail());
             })
-                ->firstOrFail();
+            ->firstOrFail();
 
             app('auth')->login($cmsUser, true);
         }
         catch (\Exception $e)
         {
-            $cmsUser = app(\App\Vendor\Telenok\Core\Model\User\User::class)->storeOrUpdate([
+            $cmsUser = app(User::class)->storeOrUpdate([
                 'title'     => ($user->getNickname() ?: $user->getEmail()),
                 'username'  => $user->getEmail(),
                 'email'     => $user->getEmail(),
                 'usernick'  => $user->getNickname(),
                 'firstname' => $user->getName(),
-                'password'  => bcrypt(uniqid()),
+                'password'  => app('hash')->make(uniqid()),
                 'active'    => 1,
             ]);
 

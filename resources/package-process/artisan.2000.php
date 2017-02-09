@@ -10,7 +10,7 @@
         '--force' => true
     ]);
 
-    if (app('\App\Vendor\Telenok\Core\Support\Install\Controller')->isTelenokInstalled())
+    if (app('\App\Vendor\Telenok\Core\Support\Install\Controller')->telenokInstalled())
     {
         $this->line('Package migrating', true);
 

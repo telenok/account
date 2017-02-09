@@ -17,11 +17,7 @@
     "require": {
         "php": ">=7.0",
         "telenok/core": "~1.0",
-        "guzzlehttp/guzzle": "~5.0|~6.0",
-        "illuminate/contracts": "~5.3",
-        "illuminate/http": "~5.3",
-        "illuminate/support": "~5.3",
-        "league/oauth1-client": "~1.0"
+        "socialiteproviders/manager" : "~2.0"
     },
     "autoload": {
         "classmap": [

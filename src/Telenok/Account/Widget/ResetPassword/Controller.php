@@ -425,7 +425,7 @@ class Controller extends \App\Vendor\Telenok\Core\Abstraction\Widget\Controller 
      */
     protected function resetPassword($user, $password)
     {
-        $user->password = bcrypt($password);
+        $user->password = app('hash')->make($password);
 
         $user->storeOrUpdate();
 
