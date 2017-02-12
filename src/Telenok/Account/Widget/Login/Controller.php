@@ -340,7 +340,7 @@ class Controller extends \App\Vendor\Telenok\Core\Abstraction\Widget\Controller
         $this->getRequest()->session()->flash('redirectPath', app('request')->get('redirect'));
 
         return app(Provider::class)
-                    ->create($name, ['redirect' => route('telenok.account.callback.social-network', ['name' => $name])])
+                    ->create($name, ['redirect' => route('telenok.account.redirect-to-provider', ['name' => $name])])
                     ->redirect();
     }
 
