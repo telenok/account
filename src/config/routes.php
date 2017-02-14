@@ -1,12 +1,18 @@
 <?php
 
-    app('router')->post('personal/account/login', array('as' => 'telenok.account.login', 'uses' => 'App\Vendor\Telenok\Account\Widget\Login\Controller@postLogin'));
-    app('router')->get('personal/account/logout', array('as' => 'telenok.account.logout', 'uses' => 'App\Vendor\Telenok\Account\Widget\Login\Controller@getLogout'));
-    app('router')->post('personal/account/password-restore', array('as' => 'telenok.account.password-restore', 'uses' => 'App\Vendor\Telenok\Account\Widget\Login\Controller@postLogin'));
-    app('router')->get('personal/account/redirect/social-network/{name}', array('as' => 'telenok.account.redirect-to-provider', 'uses' => 'App\Vendor\Telenok\Account\Widget\Login\Controller@redirectToProvider'));
-    app('router')->get('personal/account/login/social-network/callback/{name}', array('as' => 'telenok.account.handle-provider-callback', 'uses' => 'App\Vendor\Telenok\Account\Widget\Login\Controller@handleProviderCallback'));
+app('router')->post('personal/account/login', 'App\Vendor\Telenok\Account\Widget\Login\Controller@postLogin')->name('telenok.account.login');
+app('router')->get('personal/account/logout', 'App\Vendor\Telenok\Account\Widget\Login\Controller@getLogout')->name('telenok.account.logout');
+app('router')->post('personal/account/password-restore', 'App\Vendor\Telenok\Account\Widget\Login\Controller@postLogin')->name('telenok.account.password-restore');
 
-    app('router')->post('personal/account/password-reset', array('as' => 'telenok.account.reset', 'uses' => 'App\Vendor\Telenok\Account\Widget\ResetPassword\Controller@postResetLinkEmail'));
-    app('router')->get('personal/account/password-reset/process/{token}', array('as' => 'telenok.account.reset.process', 'uses' => 'App\Vendor\Telenok\Account\Widget\ResetPassword\Controller@redirectToResetForm'));
-    app('router')->post('personal/account/password-reset/finish', array('as' => 'telenok.account.reset.finish', 'uses' => 'App\Vendor\Telenok\Account\Widget\ResetPassword\Controller@reset'));
+app('router')->get('personal/account/redirect/social-network/{name}', 'App\Vendor\Telenok\Account\Widget\Login\Controller@redirectToProvider')
+    ->name('telenok.account.redirect-to-provider')
+    ->middleware('web');
+
+app('router')->get('personal/account/login/social-network/callback/{name}', 'App\Vendor\Telenok\Account\Widget\Login\Controller@handleProviderCallback')
+    ->name('telenok.account.handle-provider-callback')
+    ->middleware('web');
+
+app('router')->post('personal/account/password-reset', 'App\Vendor\Telenok\Account\Widget\ResetPassword\Controller@postResetLinkEmail')->name('telenok.account.reset');
+app('router')->get('personal/account/password-reset/process/{token}', 'App\Vendor\Telenok\Account\Widget\ResetPassword\Controller@redirectToResetForm')->name('telenok.account.reset.process');
+app('router')->post('personal/account/password-reset/finish', 'App\Vendor\Telenok\Account\Widget\ResetPassword\Controller@reset')->name('telenok.account.reset.finish');
 

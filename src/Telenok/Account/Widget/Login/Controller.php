@@ -357,25 +357,23 @@ class Controller extends \App\Vendor\Telenok\Core\Abstraction\Widget\Controller
             ->create($name)
             ->user();
 
+        $email = $user->getId() . '_' . $user->getEmail() . '.net' . $name;
+        $nick = $user->getNickname() ?: $name . '.' . date('YmdHiu');
+
         try
         {
-            $cmsUser = User::where(function ($query) use ($user)
-            {
-                $query->where('email', (string)$user->getEmail());
-                $query->orWhere('username', (string)$user->getEmail());
-            })
-            ->firstOrFail();
+            $cmsUser = User::where('email', $email)->firstOrFail();
 
             app('auth')->login($cmsUser, true);
         }
         catch (\Exception $e)
         {
             $cmsUser = app(User::class)->storeOrUpdate([
-                'title'     => ($user->getNickname() ?: $user->getEmail()),
-                'username'  => $user->getEmail(),
-                'email'     => $user->getEmail(),
-                'usernick'  => $user->getNickname(),
-                'firstname' => $user->getName(),
+                'title'     => $email,
+                'username'  => $email,
+                'email'     => $email,
+                'usernick'  => $nick,
+                'firstname' => ($user->getName() ?: $nick),
                 'password'  => app('hash')->make(uniqid()),
                 'active'    => 1,
             ]);
